@@ -359,7 +359,7 @@ const GamePlayScreen = () => {
     // LOGIQUE CRITIQUE : CHRONO, AFFICHAGE D'IMAGE ET TRANSITION
     useEffect(() => {
         // 1. Définir une limite de temps sûre (60s par défaut si non défini)
-        const timeLimit = gameState.currentSession?.time_limit ?? 30;
+        const timeLimit = gameState.currentSession?.time_limit ?? 60;
         
         if (!gameState.currentSession) return;
         

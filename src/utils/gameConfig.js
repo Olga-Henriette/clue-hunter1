@@ -3,7 +3,7 @@ export const GAME_CONSTANTS = {
     // Configuration de la Session
     // ------------------
     MAX_PLAYERS: 8,
-    QUESTION_TIME_LIMIT_S: 30, // Durée totale d'une question
+    QUESTION_TIME_LIMIT_S: 60, // Durée totale d'une question
     
     // ------------------
     // Timing des Transitions (Temps en secondes)
@@ -16,7 +16,7 @@ export const GAME_CONSTANTS = {
     // ------------------
     // Timing des Écrans (dans PublicGame/GamePlay)
     // ------------------
-    IMAGE_VISIBLE_DURATION_S: 15, // Durée pendant laquelle l'image est visible (Screen 4)
+    IMAGE_VISIBLE_DURATION_S: 30, // Durée pendant laquelle l'image est visible (Screen 4)
     CHRONO_CRITICAL_S: 5, // Quand le chrono devient rouge/critique
 
     // ------------------

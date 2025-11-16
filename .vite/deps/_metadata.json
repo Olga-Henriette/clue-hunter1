@@ -2,7 +2,42 @@
   "hash": "7c69466e",
   "configHash": "85e741a0",
   "lockfileHash": "f39c5275",
-  "browserHash": "e252195b",
-  "optimized": {},
-  "chunks": {}
+  "browserHash": "3593b865",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "08de5f9d",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "76a92292",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "c8e3340f",
+      "needsInterop": false
+    },
+    "@supabase/supabase-js": {
+      "src": "../../node_modules/@supabase/supabase-js/dist/module/index.js",
+      "file": "@supabase_supabase-js.js",
+      "fileHash": "e6b81615",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-AZZLBHVG": {
+      "file": "chunk-AZZLBHVG.js"
+    },
+    "chunk-LTZIYYLR": {
+      "file": "chunk-LTZIYYLR.js"
+    },
+    "chunk-V4OQ3NZ2": {
+      "file": "chunk-V4OQ3NZ2.js"
+    }
+  }
 }
