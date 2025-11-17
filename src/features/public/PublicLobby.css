@@ -1,0 +1,175 @@
+/* src/features/public/PublicLobby.css */
+
+/* --- Variables de base (reprises du thème) --- */
+:root {
+    --color-primary: #8b5cf6; /* Indigo/Violet */
+    --color-secondary: #fcd34d; /* Jaune/Or */
+    --color-background: #111827; /* Noir/Bleu très foncé */
+    --color-card: #1f2937; /* Gris foncé */
+    --color-text: #f3f4f6; /* Blanc cassé */
+    --color-ready: #10b981; /* Vert émeraude */
+    --color-waiting: #4b5563; /* Gris moyen */
+}
+
+.public-screen.lobby-screen.fullscreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    padding: 30px;
+    overflow: hidden;
+}
+
+/* --- 1. En-tête du Lobby --- */
+.lobby-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 40px;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.lobby-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.lobby-header h1 {
+    font-size: 3.5vw; /* Taille responsive */
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* --- 2. Grille des Joueurs --- */
+.player-grid {
+    display: grid;
+    /* 4 colonnes pour 8 joueurs */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 30px;
+    width: 80%;
+    max-width: 1200px;
+    flex-grow: 1; /* Permet à la grille de prendre de l'espace */
+    align-content: center; /* Centrer la grille verticalement */
+}
+
+.player-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 15px;
+    border-radius: 15px;
+    height: 30vh; /* Hauteur fixe relative à la vue */
+    transition: all 0.5s ease-in-out;
+}
+
+/* Slot d'attente (vide) */
+.player-slot.waiting {
+    background-color: var(--color-card);
+    border: 3px dashed var(--color-waiting);
+    opacity: 0.7;
+    animation: pulse-waiting 2s infinite alternate;
+}
+
+.profile-waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--color-waiting);
+}
+
+.placeholder-icon {
+    font-size: 5em;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.placeholder-text {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+@keyframes pulse-waiting {
+    from { opacity: 0.7; }
+    to { opacity: 1; }
+}
+
+/* Slot de joueur prêt */
+.player-slot.ready {
+    background-color: #273449; /* Légèrement plus foncé que le card, pour le contraste */
+    border: 3px solid var(--color-ready);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    opacity: 1;
+}
+
+.profile-ready {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.player-logo-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid var(--color-secondary);
+    box-shadow: 0 0 15px rgba(252, 211, 77, 0.8);
+    animation: float-ready 4s ease-in-out infinite alternate;
+}
+
+.player-role-name {
+    font-size: 2em;
+    font-weight: 800;
+    color: var(--color-ready);
+    text-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+}
+
+@keyframes float-ready {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+}
+
+/* --- 3. Message d'Attente (Bas) --- */
+.waiting-message {
+    font-size: 1.8em;
+    font-weight: 500;
+    color: var(--color-text);
+    padding: 10px 0;
+    animation: fadeInOut 2s infinite alternate;
+}
+
+.waiting-message strong {
+    color: var(--color-secondary);
+}
+
+@keyframes fadeInOut {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+/* Media Queries pour les petits écrans (adapter l'affichage si nécessaire) */
+@media (max-width: 1024px) {
+    .player-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur tablette */
+        gap: 20px;
+        width: 90%;
+    }
+    
+    .player-slot {
+        height: 25vh;
+    }
+
+    .lobby-header h1 {
+        font-size: 5vw;
+    }
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getRoleImage, getRoleDisplayName } from '../../utils/roleConfig';
 import { GAME_CONSTANTS } from '../../utils/gameConfig'; 
 import { MAX_PLAYERS } from '../setup/roles';
+import './PublicLobby.css'; 
 
 const PublicLobby = ({ players, currentSession }) => {
     const maxPlayers = MAX_PLAYERS;

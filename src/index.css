@@ -1158,3 +1158,248 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+:root {
+    /* Couleurs inspirées du design professionnel */
+    --color-dark: #121212;
+    --color-surface: #1e1e1e;
+    --color-primary: #00bcd4; /* Cyan/Bleu vif pour l'accentuation */
+    --color-secondary: #ff9800; /* Orange/Ambre pour les avertissements */
+    --color-success: #4caf50;
+    --color-error: #f44336;
+    --color-text: #e0e0e0;
+}
+
+.public-screen {
+    /* Assure que l'écran prend toute la place avec un fond sombre */
+    background-color: var(--color-dark);
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden; /* Pour la propreté */
+}
+
+/* --- HEADER BAR --- */
+.public-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: var(--color-surface);
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.question-index-display {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.highlight-text {
+    font-weight: 700;
+    color: var(--color-primary);
+    font-size: 1.8rem;
+}
+
+/* Chronomètre */
+.timer-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--color-text);
+    transition: all 0.3s ease-in-out;
+}
+
+.timer-display .icon {
+    margin-right: 10px;
+}
+
+.timer-display.warning {
+    color: var(--color-secondary); /* Orange */
+}
+
+.timer-display.critical {
+    color: var(--color-error); /* Rouge */
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+/* Statut Général */
+.game-status-info {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+.status-ready { color: var(--color-success); }
+.status-waiting { color: var(--color-primary); }
+
+
+/* --- ZONE PRINCIPALE (IMAGES) --- */
+.main-content-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.question-image-area {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    height: 100%;
+    max-height: 600px; /* Limiter la hauteur pour laisser de la place au classement */
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--color-surface);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clue-images-container {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    transition: opacity 0.5s ease;
+}
+
+.clue-images-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+.clue-image {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 4px solid var(--color-dark);
+}
+
+/* Face cachée */
+.face-cachee {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-surface);
+    transition: opacity 0.5s ease;
+}
+
+.face-cachee.reveal-animation {
+    animation: fade-in 0.8s ease-out;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.game-logo-large-hidden {
+    width: 200px;
+    height: 200px;
+    opacity: 0.7;
+    margin-bottom: 20px;
+}
+
+.message-focus {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    text-align: center;
+}
+
+
+/* --- BANDEAU INFÉRIEUR : CHIPS JOUEURS --- */
+.players-scores-display {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 10px;
+    background-color: var(--color-surface);
+    border-radius: 12px;
+}
+
+.player-chip {
+    display: flex;
+    align-items: center;
+    background-color: #2a2a2a;
+    padding: 8px 15px;
+    border-radius: 50px;
+    min-width: 150px;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+}
+
+.player-chip.ready {
+    background-color: var(--color-success);
+    color: var(--color-dark);
+    font-weight: bold;
+    border-color: var(--color-success);
+}
+
+.player-avatar-container {
+    position: relative;
+    margin-right: 10px;
+}
+
+.player-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-primary);
+}
+
+.player-chip.ready .player-logo {
+    border-color: var(--color-dark);
+}
+
+.ready-overlay {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background-color: var(--color-dark);
+    color: var(--color-success);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid var(--color-success);
+}
+.player-chip.ready .ready-overlay {
+    background-color: var(--color-dark);
+    color: var(--color-text);
+    border: 2px solid var(--color-dark);
+}
+
+.player-score-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.score-value {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+.player-chip.ready .score-value {
+    color: var(--color-dark);
+}

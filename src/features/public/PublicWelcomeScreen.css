@@ -1,0 +1,77 @@
+/* src/features/public/PublicWelcomeScreen.css */
+
+/* Variables d'exemple (à ajuster selon votre thème global) */
+:root {
+    --color-primary: #8b5cf6; /* Indigo/Violet */
+    --color-background: #1f2937; /* Gris foncé */
+    --color-text: #f3f4f6; /* Blanc cassé */
+}
+
+.public-screen.welcome-screen.fullscreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around; /* Espacement vertical du contenu */
+    min-height: 100vh;
+    padding: 5vh 5vw;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    text-align: center;
+}
+
+.game-title {
+    font-size: 4.5vw; /* Taille responsive pour grand écran */
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+.logo-container {
+    width: 30vw; /* Taille responsive */
+    max-width: 400px; /* Limite la taille sur très grand écran */
+    margin: 4vh 0;
+    animation: fadeInScale 2s ease-out;
+}
+
+.main-logo {
+    width: 100%;
+    height: auto;
+    border-radius: 50%; /* Si le logo est censé être rond */
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), 0 0 15px var(--color-primary);
+}
+
+.game-description {
+    font-size: 1.8vw;
+    max-width: 800px;
+    line-height: 1.5;
+    color: #a0aec0; /* Gris clair */
+    margin-top: 20px;
+    font-style: italic;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Media query pour les petits écrans (téléphones/tablettes en mode portrait) */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 8vw;
+    }
+
+    .logo-container {
+        width: 60vw;
+    }
+
+    .game-description {
+        font-size: 4vw;
+    }
+}

@@ -158,8 +158,17 @@ const GamePlayScreen = () => {
                 currentSession,
             };
         });
+
+        if (currentSession && currentSession.status === 'CORRECTION_PHASE') { 
+            // Si la session est en phase de correction et que le joueur n'y est pas encore
+            if (currentView !== 'CORRECTION_COUNTDOWN' && currentView !== 'CORRECTION') {
+                setCurrentView('CORRECTION_COUNTDOWN');
+                // Arrêter tout timer local, car c'est le serveur qui gère le temps global maintenant.
+                stopTimer(); 
+            }
+        }
         
-    }, [fetchCurrentQuestion, userId, navigate]);
+    }, [fetchCurrentQuestion, userId, navigate, currentView, stopTimer]);
 
     useEffect(() => {
         fetchGameUpdates();
@@ -581,10 +590,10 @@ const GamePlayScreen = () => {
             return (
                 <CountdownScreen 
                     initialCount={GAME_CONSTANTS.PRE_GAME_COUNTDOWN_S} 
-                    onCountdownEnd={() => {
+                    onCountdownEnd={async() => {
+                        await fetchGameUpdates();
+                        resetTimer();
                         setCurrentView('GAME_PLAY');
-                        // Forcer la mise à jour pour charger la nouvelle question/session si l'Admin a déjà avancé
-                        fetchGameUpdates(); 
                     }} 
                 />
             );

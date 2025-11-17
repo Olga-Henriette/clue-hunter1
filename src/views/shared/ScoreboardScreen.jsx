@@ -85,21 +85,6 @@ const ScoreboardScreen = ({ session, onNextTransition }) => {
             </div>
 
             {/* Vainqueur / Graphique d'Évolution */}
-            <div className="winner-display">
-                {winner && (
-                    <div className="first-place">
-                        <img 
-                            src={getRoleImage(winner.role)} 
-                            alt={`Logo ${getRoleDisplayName(winner.role)}`} 
-                            className="winner-logo"
-                        />
-                        <h2>Premier : **{getRoleDisplayName(winner.role)}** avec {winner.current_score} points!</h2>
-                        <p>Félicitations !</p>
-                    </div>
-                )}
-                {/*  */}
-                {/* Ici, on intégrerait un graphique d'évolution si nous en avions un. */}
-            </div>
 
             {/* Tableau du Classement */}
             <div className="ranking-table">
@@ -127,17 +112,6 @@ const ScoreboardScreen = ({ session, onNextTransition }) => {
                         ))}
                     </tbody>
                 </table>
-            </div>
-
-            {/* --- GRAPHIC D'ÉVOLUTION (Screen 7) --- */}
-            <div className="score-evolution-chart">
-                <h3>Évolution des Scores (Question 1 à {currentQuestionIndex + 1})</h3>
-                <div className="chart-container">
-                    {/* Placeholder pour la courbe d'évolution */}
-                    <div className="placeholder-chart">
-                        <p>Courbe d'évolution pour chaque joueur. (Implémentation graphique à venir.)</p>                        
-                    </div>
-                </div>
             </div>
             
             {/* Barre de Progression (i/n en pourcentage) */}

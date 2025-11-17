@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase, subscribeToTable } from '../../api/supabaseClient';
+import './PublicScreen.css'; 
 
 import CountdownScreen from '../../views/shared/CountdownScreen'; // Écran Compte à rebours
 import CorrectionScreen from '../../views/shared/CorrectionScreen'; // Écran 6

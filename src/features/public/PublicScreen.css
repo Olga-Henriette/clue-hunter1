@@ -1,140 +1,276 @@
-/* --- Mise en page globale (Plein Écran) --- */
+/* src/features/public/PublicScreen.css */
+
+/* --- Variables et Fond --- */
+:root {
+    --color-primary: #f97316; /* Orange chaud */
+    --color-secondary: #fcd34d; /* Jaune/Or */
+    --color-background: #111827; /* Noir/Bleu très foncé */
+    --color-card: #1f2937; /* Gris foncé */
+    --color-text: #f3f4f6; /* Blanc cassé */
+    --color-ready: #10b981; /* Vert émeraude */
+    --color-warning: #fbbf24; /* Ambre */
+    --color-critical: #ef4444; /* Rouge */
+}
+
 .public-screen.fullscreen {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 100vw;
     height: 100vh;
-    background-color: #1e1e2f; /* Fond sombre moderne */
-    color: #f0f0f0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 20px;
-    box-sizing: border-box;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    padding: 0;
+    overflow: hidden;
 }
 
-/* --- Screen 1: Welcome Screen --- */
-.welcome-screen {
-    justify-content: space-around;
-    text-align: center;
-}
-
-.welcome-screen .game-title {
-    font-size: 3.5em;
-    color: #00bcd4; /* Bleu Cyan pour l'interactivité */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.welcome-screen .main-logo {
-    width: 250px;
-    height: auto;
-    margin: 40px 0;
-    transition: transform 1s ease-in-out;
-}
-
-.welcome-screen .game-description {
-    font-size: 1.2em;
-    max-width: 600px;
-    opacity: 0.8;
-}
-
-/* --- Screen 2: Lobby Screen --- */
-.lobby-screen {
-    justify-content: flex-start; /* Aligner le contenu vers le haut */
-}
-
-.lobby-header {
+.loading-state {
     display: flex;
     align-items: center;
-    width: 90%;
-    max-width: 1000px;
-    margin-bottom: 50px;
-    padding-top: 20px;
-}
-
-.lobby-header h1 {
+    justify-content: center;
     font-size: 2em;
-    margin-left: 20px;
-    color: #f0f0f0;
+    color: var(--color-warning);
+    height: 100%;
 }
 
-.lobby-logo {
-    width: 60px;
-    height: 60px;
+/* --- 1. En-tête (Barre du Haut) --- */
+.public-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #1a1a2e; /* Un peu plus clair que le fond */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 10;
 }
 
-/* Grille des 8 Profils (2 lignes de 4) */
-.player-grid {
+.question-index-display {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.highlight-text {
+    color: var(--color-primary);
+    font-size: 1.2em;
+    font-weight: 800;
+}
+
+/* --- Chronomètre --- */
+.timer-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 2.5em;
+    font-weight: 900;
+    color: var(--color-text);
+    padding: 5px 15px;
+    border-radius: 8px;
+    background-color: var(--color-card);
+    transition: all 0.3s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.timer-display .icon {
+    font-size: 1em;
+}
+
+.timer-display.warning {
+    color: var(--color-warning);
+    background-color: #3e260e;
+}
+
+.timer-display.critical {
+    color: var(--color-critical);
+    background-color: #4a1919;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* --- Statut Général --- */
+.game-status-info {
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.status-ready {
+    color: var(--color-ready);
+}
+
+.status-waiting {
+    color: #9ca3af; /* Gris neutre */
+}
+
+/* --- 2. Zone Principale (Images) --- */
+.main-content-area {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 20px;
+    /* Remplissage pour ne pas toucher le bandeau du bas */
+    margin-bottom: 100px; 
+}
+
+/* --- Zone de l'Image (Screen 4/5) --- */
+.question-image-area {
+    width: 100%;
+    height: 100%;
+    max-width: 900px;
+    max-height: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.clue-images-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colonnes */
-    gap: 30px;
-    width: 90%;
-    max-width: 1000px;
-    margin: 0 auto;
+    grid-template-columns: repeat(3, 1fr); /* 3 images en ligne */
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1s ease-out;
 }
 
-.player-slot {
+.clue-images-container.hidden {
+    opacity: 0;
+    pointer-events: none; /* Empêche les interactions si caché */
+}
+
+.clue-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.5s;
+}
+
+/* --- Face Cachée --- */
+.face-cachee {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 150px; /* Taille fixe */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.5s ease-in-out;
+    background-color: var(--color-background); /* Reprend le fond */
+    z-index: 5;
+    border-radius: 12px;
 }
 
-.player-slot.waiting {
-    background-color: #3a3f47; /* Gris foncé pour l'attente */
-    border: 2px dashed #666;
-    opacity: 0.7;
+.reveal-animation {
+    animation: fadeIn 1s ease-out;
 }
 
-.player-slot.ready {
-    background-color: #00bcd4; /* Couleur de rôle prêt */
-    border: 2px solid #fff;
-    opacity: 1;
-    transform: scale(1.05); /* Petit zoom pour l'effet "arrivé" */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-.profile-ready, .profile-waiting {
+.game-logo-large-hidden {
+    width: 150px;
+    height: auto;
+    opacity: 0.2;
+    margin-bottom: 20px;
+}
+
+.message-focus {
+    font-size: 1.8em;
+    font-weight: 500;
+    color: var(--color-warning);
+    text-align: center;
+    line-height: 1.4;
+}
+
+.message-focus strong {
+    color: var(--color-secondary);
+}
+
+/* --- 3. Bandeau Inférieur (Joueurs et Scores) --- */
+.players-scores-display {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px 10px;
+    background-color: var(--color-card);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.player-chip {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 5px;
+    padding: 5px 0;
+    width: 10%; /* Pour garantir un espacement égal pour 8 joueurs */
+    transition: all 0.3s;
+    opacity: 0.6;
+    transform: scale(0.95);
 }
 
-.player-logo-large {
-    width: 80px;
-    height: 80px;
+.player-chip.ready {
+    opacity: 1;
+    background-color: rgba(16, 185, 129, 0.1); /* Fond vert très léger */
+    border-radius: 8px;
+    transform: scale(1);
+    box-shadow: 0 0 10px var(--color-ready);
+}
+
+.player-avatar-container {
+    position: relative;
+}
+
+.player-logo {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid white;
-    margin-bottom: 5px;
+    border: 3px solid #6b7280;
+    transition: border-color 0.3s;
 }
 
-.player-role-name {
-    font-weight: bold;
-    font-size: 1.1em;
+.player-chip.ready .player-logo {
+    border-color: var(--color-ready);
 }
 
-.placeholder-icon {
-    font-size: 3em;
-    color: #999;
+.ready-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: var(--color-ready);
+    color: white;
+    font-size: 1.2em;
+    font-weight: 900;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-card); /* Bordure pour le détacher */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.placeholder-text {
-    color: #999;
-    font-size: 0.9em;
+.player-score-name {
+    font-size: 1em;
+    font-weight: 500;
+    color: var(--color-text);
 }
 
-.waiting-message {
-    margin-top: 50px;
-    font-size: 1.5em;
-    color: #ff9800; /* Orange vif */
-    animation: fade-in-out 2s infinite;
-}
-
-@keyframes fade-in-out {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+.score-value {
+    font-weight: 800;
+    color: var(--color-secondary);
 }
