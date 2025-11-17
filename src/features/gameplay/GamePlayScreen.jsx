@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { getRoleImage } from '../../utils/roleConfig';
 import WHAT_LOGO from '../../assets/what.png';
+import { GAME_CONSTANTS } from '../../utils/gameConfig';
 
 import CountdownScreen from '../../views/shared/CountdownScreen';
 import CorrectionScreen from '../../views/shared/CorrectionScreen';
@@ -19,7 +20,6 @@ const INITIAL_GAME_STATE = {
     isAnswerLocked: false, // Vrai si la réponse a été soumise (bonne ou mauvaise)
     penaltyCount: 0,
 };
-
 
 const shuffleArray = (array) => {
     // Crée une copie pour ne pas modifier l'original
@@ -166,7 +166,6 @@ const GamePlayScreen = () => {
 
         // Abonnement temps réel à la session (pour les transitions Admin)
         const sessionChannel = subscribeToTable('game_sessions', (payload) => {
-            console.log('Game session updated via Admin.');
             fetchGameUpdates();
         });
 
@@ -224,11 +223,12 @@ const GamePlayScreen = () => {
             }));
             setCursorPosition(0); // Réinitialiser le curseur
 
+            // 3. Afficher la notification de pénalité
             setMessage(`-${PENALTY_AMOUNT}`);
-            setTimeout(() => setMessage(''), 3000); 
+            setTimeout(() => setMessage(''), 3000); // L'enlever après 3 secondes
 
         } // Nous n'avons plus besoin de la vérification de longueur, car le tableau est de longueur fixe.
-    }, [gameState.answerArray]); 
+    }, [gameState.answerArray, setMessage]); 
 
     useEffect(() => {
         if (gameState.isAnswerLocked || !gameState.currentQuestion || !isRunning) return;
@@ -355,11 +355,39 @@ const GamePlayScreen = () => {
         }
     }, [gameState.answerArray, gameState.currentQuestion, cursorPosition]); // Dépendance à cursorPosition pour éviter la boucle infinie
 
+    const handleTimeEnd = useCallback(() => {
+        // 1. Si la réponse est déjà lock, ne rien faire (la transition a déjà été lancée)
+        if (gameState.isAnswerLocked) return stopTimer();
+
+        // 2. Lock la réponse et passe à la transition.
+        setGameState(prevState => ({ ...prevState, isAnswerLocked: true }));
+        stopTimer();
+        
+        // 3. Afficher la pénalité pour non-réponse
+        const penaltyValue = -(PENALTY_AMOUNT * 2); // Pénalité plus lourde
+        setMessage(`PÉNALITÉ DE TEMPS: ${penaltyValue}`); // Afficher le penalty (-XX)
+
+        // 4. Déclencher le SCORING sur le backend
+        supabase.rpc('submit_player_answer', {
+            player_uuid: userId,
+            session_uuid: gameState.currentSession.id,
+            action: 'TIME_OUT_ANSWER', // Nouvelle action pour la fin du temps
+            penalty_count: gameState.penaltyCount,
+            time_remaining: 0,
+        }).catch(rpcError => {
+            console.error("Erreur RPC de fin de temps:", rpcError);
+        });
+
+        // 5. Lancer la transition vers la correction via le useEffect de transition
+        setTransitionStatus('PREPARING_CORRECTION');
+
+    }, [gameState.isAnswerLocked, gameState.penaltyCount, userId, stopTimer, gameState.currentSession]);
+
     
     // LOGIQUE CRITIQUE : CHRONO, AFFICHAGE D'IMAGE ET TRANSITION
     useEffect(() => {
         // 1. Définir une limite de temps sûre (60s par défaut si non défini)
-        const timeLimit = gameState.currentSession?.time_limit ?? 60;
+        const timeLimit = gameState.currentSession?.time_limit ?? GAME_CONSTANTS.QUESTION_TIME_LIMIT_S;
         
         if (!gameState.currentSession) return;
         
@@ -371,10 +399,8 @@ const GamePlayScreen = () => {
         }
         
         // Si le jeu est en cours et que le chrono est à zéro, on passe à la correction
-        if (isRunning && timeRemaining === 0) {
-            stopTimer(); 
-            setGameState(prevState => ({ ...prevState, isAnswerLocked: true })); 
-            setTransitionStatus('PREPARING_CORRECTION'); 
+        if (isRunning && timeRemaining === 0 && !gameState.isAnswerLocked && transitionStatus === null) {
+            handleTimeEnd();
             return;
         }
 
@@ -384,7 +410,7 @@ const GamePlayScreen = () => {
         const elapsedTime = timeLimit - timeRemaining; 
         
         if (isRunning) {
-            if (elapsedTime >= 15) {
+            if (elapsedTime >= GAME_CONSTANTS.IMAGE_VISIBLE_DURATION_S) {
                 // Cacher l'image après 15s écoulées
                 setIsImageVisible(false);
             } else {
@@ -394,7 +420,7 @@ const GamePlayScreen = () => {
         }
         // Si isRunning est false (par validation), on ne change plus l'état du masque.
         
-    }, [timeRemaining, isRunning, gameState.currentSession, stopTimer]);
+    }, [timeRemaining, isRunning, gameState.currentSession, stopTimer, handleTimeEnd, gameState.isAnswerLocked, transitionStatus]);
         
     // LOGIQUE DE TRANSITION : Attente de 3 secondes avant la vue de Correction
     useEffect(() => {
@@ -408,7 +434,7 @@ const GamePlayScreen = () => {
                 // Réinitialiser le statut de transition
                 setTransitionStatus(null);
                 
-            }, 3000); 
+            }, GAME_CONSTANTS.TRANSITION_COUNTDOWN_S * 1000); 
 
             return () => clearTimeout(timer);
         }
@@ -447,7 +473,7 @@ const GamePlayScreen = () => {
             // Afficher le message de succès et le score final
             const finalScore = 100 - (gameState.penaltyCount * PENALTY_AMOUNT);
             
-            setMessage(`Réponse correcte ! Score final pour cette question: ${finalScore} points.`);
+            setMessage(`Réponse correcte !`);
             // Le message reste affiché jusqu'à la prochaine question
 
             // Afficher la notification de bonus
@@ -509,7 +535,7 @@ const GamePlayScreen = () => {
 
     // ... (votre code juste avant la ligne 407 'if (loading) return...')
 
-    if (loading || !userId) return <div>Chargement...</div>;
+    //if (loading || !userId) return <div>Chargement...</div>;
 
     // --- VUES DES TRANSITIONS ---
 
@@ -518,9 +544,8 @@ const GamePlayScreen = () => {
         case 'CORRECTION_COUNTDOWN':
             return (
                 <CountdownScreen 
-                    initialCount={5} // Compte à rebours de 5 secondes avant la correction
+                    initialCount={GAME_CONSTANTS.TRANSITION_COUNTDOWN_S} // Compte à rebours de 5 secondes avant la correction
                     onCountdownEnd={() => setCurrentView('CORRECTION')} 
-                    message="Préparation de la Correction..."
                 />
             );
             
@@ -555,13 +580,12 @@ const GamePlayScreen = () => {
             // Après le compte à rebours, on retourne au GAME_PLAY et on met à jour la question (via fetchGameUpdates)
             return (
                 <CountdownScreen 
-                    initialCount={3} 
+                    initialCount={GAME_CONSTANTS.PRE_GAME_COUNTDOWN_S} 
                     onCountdownEnd={() => {
                         setCurrentView('GAME_PLAY');
                         // Forcer la mise à jour pour charger la nouvelle question/session si l'Admin a déjà avancé
                         fetchGameUpdates(); 
                     }} 
-                    message="Prochaine Question dans..."
                 />
             );
 
@@ -604,7 +628,7 @@ const GamePlayScreen = () => {
 
             return (
                 <div className="screen-e-gameplay fullscreen">
-                    
+                   
                     {/* Boîte de notification qui reste si le joueur a validé */}
                     {isWaitingAfterValidation && (
                         <div className="notification-box-locked">
@@ -613,16 +637,6 @@ const GamePlayScreen = () => {
                             </p>
                         </div>
                     )}
-
-                    {/* Notification qui dure 3s (pour la pénalité instantanée) */}
-                    {message && message.includes('-') && (
-                        // Utiliser la notification-box-locked pour la pénalité est visuellement plus fort
-                        <div className="notification-box-locked penalty-fade">
-                            <p className={`status-notification error`} style={{position: 'static', transform: 'none', animation: 'none'}}>{message} points</p>
-                        </div>
-                    )}
-
-
                     {/* 1. Entête & Chrono */}
                     <div className="game-header">
                         <div className="player-info">
@@ -667,21 +681,38 @@ const GamePlayScreen = () => {
                         ))}
                     </div>
 
-                    {/* 3. Zone de Réponse (Affichage de la réponse masquée/saisie) */}
-                    <div className="answer-box">
-                        {answerLetters.map((_, index) => (
-                            <span 
-                                key={index} 
-                                // Désactiver l'édition si le joueur a déjà validé
-                                onClick={() => !gameState.isAnswerLocked && setCursorPosition(index)}
-                                className={`answer-slot ${index === cursorPosition ? 'cursor' : ''} ${gameState.isAnswerLocked ? 'locked' : ''}`} 
+                    {/* Conteneur Flex pour aligner la boîte de réponse et le penalty */}
+                    <div className="answer-and-penalty-container">
+                        {/* 3. Zone de Réponse (Affichage de la réponse masquée/saisie) */}
+                        <div className="answer-box">
+                            {answerLetters.map((_, index) => (
+                                <span 
+                                    key={index} 
+                                    // Désactiver l'édition si le joueur a déjà validé
+                                    onClick={() => !gameState.isAnswerLocked && setCursorPosition(index)}
+                                    className={`answer-slot ${index === cursorPosition ? 'cursor' : ''} ${gameState.isAnswerLocked ? 'locked' : ''}`} 
+                                >
+                                    {gameState.answerArray[index] || '_'}
+                                </span>
+                            ))}
+                        </div>
+                        {/* NOUVEL AFFICHAGE DU PENALTY (à droite de la case) */}
+                        {message.startsWith('-') && (
+                            <div 
+                                style={{
+                                    color: 'red',
+                                    fontSize: '24px',
+                                    fontWeight: 'bold',
+                                    marginLeft: '20px',
+                                    alignSelf: 'center', // Aligner verticalement
+                                    animation: 'bounce 0.5s infinite alternate',
+                                }}
                             >
-                                {gameState.answerArray[index] || '_'}
-                            </span>
-                        ))}
+                                {message}
+                            </div>
+                        )}
                     </div>
 
-                    {/* 4. Affichage des lettres disponibles (Letter Pool) */}
                     <div className="letter-pool-display single-line">
                         <div className="available-letters-box">
                             <div className="letter-line">
@@ -702,7 +733,7 @@ const GamePlayScreen = () => {
                             disabled={isValidationDisabled || isWaitingAfterValidation} 
                             className="btn-validate"
                         >
-                            {isCorrectAnswer ? 'VALIDER LA RÉPONSE' : 'SAISIR LA RÉPONSE COMPLÈTE'}
+                            {isCorrectAnswer ? 'VALIDER LA RÉPONSE' : 'VALIDER'}
                         </button>
                     </div>
                     

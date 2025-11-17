@@ -171,7 +171,7 @@ const AdminScreen = () => {
         }
 
         // Si l'appel RPC réussit (le serveur s'est occupé de tout)
-        alert("Jeu et profils joueurs réinitialisés. Le lobby est vide.");
+        //alert("Jeu et profils joueurs réinitialisés. Le lobby est vide.");
         
         // Recharger les données pour mettre à jour l'Admin
         await fetchData(); 

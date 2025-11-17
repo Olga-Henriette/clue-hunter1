@@ -12,6 +12,7 @@ import LANG_IMG from '../assets/roles/ROLE_LANG.jpg';
 // Importation du logo principal
 import GAME_LOGO from '../assets/game_logo.png';
 
+
 // ----------------------------------------------------------------
 // Configuration des Rôles
 // Les clés doivent correspondre aux valeurs 'role' stockées dans la BDD (ex: 'NURS', 'DROIT', etc.)

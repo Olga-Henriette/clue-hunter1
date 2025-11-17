@@ -1,8 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase, subscribeToTable } from '../../api/supabaseClient';
 import { getRoleImage, getRoleDisplayName } from '../../utils/roleConfig'; 
+import { GAME_CONSTANTS } from '../../utils/gameConfig';
+import './ScoreboardScreen.css'; 
+
 
 const ScoreboardScreen = ({ session, onNextTransition }) => {
+
+    // 1. Déclencheur du temps d'affichage (8 secondes)
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (onNextTransition) {
+                onNextTransition(); 
+            }
+        }, GAME_CONSTANTS.SCOREBOARD_VIEW_DURATION_S * 1000); // Durée: 8s (Utilise la constante)
+
+        return () => clearTimeout(timer);
+    }, [onNextTransition]);
+
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -44,7 +59,7 @@ const ScoreboardScreen = ({ session, onNextTransition }) => {
             if (onNextTransition) {
                 onNextTransition();
             }
-        }, 8000); 
+        }, GAME_CONSTANTS.SCOREBOARD_VIEW_DURATION_S * 1000); 
 
         return () => {
             playerChannel.unsubscribe();

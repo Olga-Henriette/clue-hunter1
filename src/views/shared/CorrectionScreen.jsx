@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import GAME_LOGO from '../../utils/roleConfig'; 
+import './CorrectionScreen.css'; 
+import { GAME_CONSTANTS } from '../../utils/gameConfig';
+
 
 const CorrectionScreen = ({ question, session, onCorrectionEnd }) => {
     // Si la question n'est pas passée, on ne peut rien faire
@@ -22,6 +25,8 @@ const CorrectionScreen = ({ question, session, onCorrectionEnd }) => {
         if (animationComplete) return;
 
         let index = 0;
+        const answerKey = question.answer_key.toUpperCase();
+        
         // Intervalle pour compléter une lettre toutes les 150 ms (ajustez si besoin)
         const interval = setInterval(() => {
             if (index < answerLength) {
@@ -35,19 +40,34 @@ const CorrectionScreen = ({ question, session, onCorrectionEnd }) => {
                 clearInterval(interval);
                 setAnimationComplete(true);
                 
-                // Déclencher l'événement de fin de correction après un court délai
-                // pour laisser le temps au spectateur de voir la réponse complète
-                setTimeout(() => {
-                    if (onCorrectionEnd) {
-                        onCorrectionEnd();
-                    }
-                }, 2000); // 2 secondes après la fin de l'animation
             }
         }, 150);
 
-        return () => clearInterval(interval);
-    }, [answerKey, answerLength, animationComplete, onCorrectionEnd]);
+        const correctionTimer = setTimeout(() => {
+            if (onCorrectionEnd) {
+                onCorrectionEnd();
+            }
+        }, GAME_CONSTANTS.CORRECTION_VIEW_DURATION_S * 1000); // Durée totale: 10s
 
+        return () => {
+             clearInterval(interval);
+        }
+
+    }, [answerKey, answerLength, animationComplete, question.answer_key]);
+
+    // --- LOGIQUE DE TRANSITION APRÈS DURÉE FIXE (10 secondes) ---
+    useEffect(() => {
+        if (!onCorrectionEnd) return; // S'assurer que la fonction existe
+
+        const correctionTimer = setTimeout(() => {
+            onCorrectionEnd(); // Déclenche la transition vers ScoreboardScreen
+        }, GAME_CONSTANTS.CORRECTION_VIEW_DURATION_S * 1000); // Durée totale: 10s
+
+        return () => {
+             clearTimeout(correctionTimer); // Nettoyage lors du démontage ou re-rendu
+        };
+    }, [onCorrectionEnd]); // Dépendance sur la fonction de fin de correction
+    
     // --- RENDU ---
     return (
         <div className="correction-screen fullscreen">

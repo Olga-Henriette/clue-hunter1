@@ -1,62 +1,139 @@
+/* ======================================= */
+/* 6. SCREEN F: CORRECTION */
+/* ======================================= */
+
 .correction-screen {
-    display: flex;
+    /* Hérite de fullscreen (display: flex, min-height, etc.) */
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
-    background-color: #282c34; /* Fond sombre pour contraste */
-    color: white;
-    text-align: center;
+    justify-content: space-between; 
+    padding: 20px 20px 40px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
-.correction-screen .header {
+.header-correction {
+    display: flex;
+    justify-content: space-between; /* Pour mettre Q i/n à droite */
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
     margin-bottom: 30px;
 }
 
-.correction-screen .game-logo {
-    width: 80px;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.correction-screen .answer-box.correction-mode {
+.header-left {
     display: flex;
-    justify-content: center;
-    margin: 40px 0;
+    align-items: center;
+    gap: 20px;
 }
 
-.correction-screen .answer-slot {
-    /* Utiliser les mêmes styles que GamePlayScreen, mais ajouter une transition */
-    display: inline-flex;
+.header-correction h1 {
+    font-size: 2.5em;
+    color: var(--color-secondary); /* Titre principal */
+    margin: 0;
+}
+
+.game-logo-large {
+    /* Style du logo (à adapter si vous en avez un dans votre global CSS) */
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+}
+
+.question-count {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #bbb;
+}
+
+.clue-images-correction {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
-    margin: 0 5px;
-    border: 3px solid #61dafb;
-    font-size: 24px;
+    gap: 20px;
+    margin-bottom: 50px; /* Plus d'espace sous les images */
+    flex-grow: 1; /* Pour centrer verticalement le bloc Images/Réponse */
+    max-width: 1200px;
+    width: 100%;
+}
+
+.correction-image {
+    /* Réutiliser le style de l'image visible de l'écran de jeu */
+    width: 300px; 
+    height: 200px;
+    object-fit: cover;
+    border: 5px solid var(--color-card);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.letter-pool-display-correction {
+    /* Style pour la pool de lettres, similaire à l'écran de jeu */
+    width: 100%;
+    max-width: 850px;
+    margin-bottom: 25px; /* Espace avant la réponse */
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #1a1a2e;
+    text-align: center;
+}
+
+.letter-line-correction {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.letter-display-chip-correction {
+    font-size: 1.2em;
     font-weight: bold;
-    background-color: #333;
-    color: #f0f0f0;
-    transition: background-color 0.1s ease-in, color 0.1s ease-in;
+    color: var(--color-secondary);
+    background-color: #333355;
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 1px solid #4e4e7d;
 }
 
-.correction-screen .answer-slot.revealed {
-    background-color: #4CAF50; /* Vert lors de la révélation */
+/* Boîte de Réponse (Correction) */
+.answer-box.correction-mode {
+    gap: 10px;
+    margin-bottom: 40px; /* Espace sous la réponse */
+    padding: 0; /* Pas de padding car les slots sont stylisés */
+    background-color: transparent; /* Pas de fond sombre autour de la réponse */
+}
+
+.answer-slot-correction {
+    /* Style de base des slots de réponse (grisé/vide) */
+    width: 45px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #333355; /* Fond sombre pour la case vide */
+    border: 3px solid #555;
+    border-radius: 8px;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #888; /* Couleur du caractère masqué ('_') */
+    text-transform: uppercase;
+}
+
+.answer-slot-correction.revealed {
+    /* Style quand la lettre est révélée */
+    background-color: var(--color-success); /* Vert pour la bonne réponse */
+    border-color: var(--color-success);
     color: white;
+    transition: background-color 0.1s, color 0.1s;
 }
 
-/* Styles pour Letter Pool (réutilisation) */
-.letter-pool-display {
-    margin-top: 20px;
+.final-message-correction {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-top: 10px;
 }
 
-.letter-display-chip {
-    /* Assurez-vous d'avoir les styles pour les chips du letter pool ici */
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 3px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-}

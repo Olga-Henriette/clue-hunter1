@@ -1,7 +1,7 @@
 // Constantes pour la logique de score 
 export const BASE_SCORE = 100;
 export const PENALTY_AMOUNT = 15;
-export const MAX_TIME_SECONDS = 30; // Durée totale d'une question
+export const MAX_TIME_SECONDS = 60; // Durée totale d'une question
 export const BONUS_CUTOFF_SECONDS = 10; // Temps restant minimum pour obtenir un bonus (30s - 20s = 10s)
 
 /**

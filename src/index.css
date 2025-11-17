@@ -883,7 +883,7 @@ body {
     align-items: center;
     justify-content: space-between; 
     padding: 20px 20px 40px; /* Plus d'espace en bas */
-    min-height: 100vh;
+    height: 100vh;
     box-sizing: border-box;
     width: 100%;
 }
@@ -958,7 +958,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    margin: 30px 0;
+    margin-top: 10px;
     flex-grow: 1; 
     max-width: 1200px;
     width: 100%;
@@ -1009,8 +1009,8 @@ body {
 }
 
 .answer-slot {
-    width: 45px;
-    height: 55px;
+    width: 40px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1053,6 +1053,7 @@ body {
     padding: 15px;
     border-radius: 10px;
     background-color: #1a1a2e;
+    margin-top: 10px;
 }
 
 .available-letters-box {
@@ -1079,6 +1080,20 @@ body {
     cursor: default;
 }
 
+.answer-and-penalty-container {
+    display: flex;
+    justify-content: center; /* Centrer le bloc entier sur la page */
+    align-items: center; /* Aligner verticalement le penalty avec la boîte de réponse */
+    margin-bottom: 25px; /* Pour remplacer la marge précédente du .answer-box */
+}
+
+/* Retirer la marge du bas du .answer-box pour ne pas dupliquer */
+.answer-box {
+    /* display: flex; ... (garder les propriétés existantes) */
+    /* REMPLACER: margin-bottom: 25px; */
+    margin-bottom: 0; 
+}
+
 /* --- 5. Bouton de Validation (Bas Droite) --- */
 
 .game-actions {
@@ -1086,7 +1101,7 @@ body {
     max-width: 850px;
     display: flex;
     justify-content: center; 
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .btn-validate {

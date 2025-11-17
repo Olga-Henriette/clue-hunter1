@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './CountdownScreen.css'; 
 
-const CountdownScreen = ({ initialCount = 3, onCountdownEnd, message = "Préparez-vous !" }) => {
+const CountdownScreen = ({ initialCount = 3, onCountdownEnd}) => {
     const [count, setCount] = useState(initialCount);
 
     useEffect(() => {
@@ -24,7 +24,6 @@ const CountdownScreen = ({ initialCount = 3, onCountdownEnd, message = "Prépare
     return (
         <div className="countdown-overlay">
             {/* Afficher le message d'en-tête */}
-            <h2 className="countdown-message">{message}</h2> 
             <div key={count} className="countdown-number">
                 {count > 0 ? count : 'GO!'}
             </div>

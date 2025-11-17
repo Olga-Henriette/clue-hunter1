@@ -3,7 +3,7 @@ export const GAME_CONSTANTS = {
     // Configuration de la Session
     // ------------------
     MAX_PLAYERS: 8,
-    QUESTION_TIME_LIMIT_S: 60, // Durée totale d'une question
+    QUESTION_TIME_LIMIT_S: 20, // Durée totale d'une question
     
     // ------------------
     // Timing des Transitions (Temps en secondes)
@@ -11,7 +11,7 @@ export const GAME_CONSTANTS = {
     PRE_GAME_COUNTDOWN_S: 3, // Avant la première question / après le lobby
     TRANSITION_COUNTDOWN_S: 3, // Entre correction et nouvelle question
     CORRECTION_VIEW_DURATION_S: 10, // Durée après l'animation de correction avant le classement
-    SCOREBOARD_VIEW_DURATION_S: 10, // Durée d'affichage du classement (Screen 7)
+    SCOREBOARD_VIEW_DURATION_S: 8, // Durée d'affichage du classement (Screen 7)
 
     // ------------------
     // Timing des Écrans (dans PublicGame/GamePlay)
